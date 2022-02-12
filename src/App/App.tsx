@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "../Components/Header";
 import Home from "../Page/Home";
-import Conversion from "../Page/Conversion";
+import Synthesis from "../Page/Synthesis";
 import { Container } from "./AppStyledComponents";
 
 export default function App() {
@@ -12,7 +12,7 @@ export default function App() {
                 <Header />
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/conversion" element={<Conversion />} />
+                    <Route path="/conversion" element={<Synthesis />} />
                 </Routes>
             </Container>
         </BrowserRouter>
