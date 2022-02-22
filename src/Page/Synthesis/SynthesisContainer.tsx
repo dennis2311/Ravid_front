@@ -8,7 +8,7 @@ export default function SynthesisContainer() {
     return (
         <Container>
             <Header />
-            <InputPreviews />
+            <Previews />
             <SynthesisGuide />
         </Container>
     );
@@ -56,50 +56,103 @@ function Header() {
     );
 }
 
-function InputPreviews() {
+function Previews() {
     const {
+        authorizedImageURL,
         photoURL,
         videoURL,
-        imageCoord,
+        synthesizedPhotoURL,
         synthesizedVideoURL,
+    } = useSynthesisContext();
+    return (
+        <PreviewRow
+            show={
+                authorizedImageURL != null ||
+                photoURL != null ||
+                videoURL != null
+            }
+        >
+            {synthesizedPhotoURL || synthesizedVideoURL ? (
+                <ResultPreview />
+            ) : (
+                <InputPreview />
+            )}
+        </PreviewRow>
+    );
+}
+
+function InputPreview() {
+    const {
+        authorizedImageURL,
+        photoURL,
+        videoURL,
+        authorizedImageCoord,
+        imageCoord,
+        setAuthorizedImageCoord,
+        setImageCoord,
         getImageCoord,
     } = useSynthesisContext();
 
     return (
-        <PreviewRow show={photoURL != null || videoURL != null}>
-            {synthesizedVideoURL ? (
-                <SynthesizedVideoPreviewContainer>
-                    <SynthesizedVideoPreview
-                        src={synthesizedVideoURL}
-                        controls
-                    />
-                </SynthesizedVideoPreviewContainer>
-            ) : (
-                <>
-                    <PreviewContainer>
-                        {photoURL ? (
-                            <>
-                                <PhotoPreview
-                                    src={photoURL}
-                                    onClick={getImageCoord}
-                                />
-                                {`선택 좌표: ${imageCoord}`}
-                            </>
-                        ) : (
-                            `사진을 업로드 해주세요`
-                        )}
-                    </PreviewContainer>
-                    <PreviewContainer>
-                        {videoURL ? (
-                            <VideoPreview src={videoURL} controls />
-                        ) : (
-                            `동영상을 업로드 해주세요`
-                        )}
-                    </PreviewContainer>
-                </>
-            )}
-        </PreviewRow>
+        <>
+            <PreviewContainer>
+                {authorizedImageURL ? (
+                    <>
+                        <PhotoPreviewContainer>
+                            <PhotoPreview
+                                src={authorizedImageURL}
+                                onClick={(e) => {
+                                    setAuthorizedImageCoord(getImageCoord(e));
+                                }}
+                            />
+                        </PhotoPreviewContainer>
+                        <CoordText>{`선택 좌표: ${authorizedImageCoord}`}</CoordText>
+                    </>
+                ) : (
+                    `제품 사진 업로드 필요`
+                )}
+            </PreviewContainer>
+            <PreviewContainer>
+                {photoURL && (
+                    <>
+                        <PhotoPreviewContainer>
+                            <PhotoPreview
+                                src={photoURL}
+                                onClick={(e) => {
+                                    setImageCoord(getImageCoord(e));
+                                }}
+                            />
+                        </PhotoPreviewContainer>
+                        <CoordText>{`선택 좌표: ${imageCoord}`}</CoordText>
+                    </>
+                )}
+                {videoURL && <VideoPreview src={videoURL} controls />}
+                {!photoURL && !videoURL && `사진/동영상 업로드 필요`}
+            </PreviewContainer>
+        </>
     );
+}
+
+function ResultPreview() {
+    const { synthesizedPhotoURL, synthesizedVideoURL } = useSynthesisContext();
+
+    if (synthesizedPhotoURL) {
+        return (
+            <SynthesizedResultPreviewContainer>
+                <SynthesizedPhotoPreview src={synthesizedPhotoURL} />
+            </SynthesizedResultPreviewContainer>
+        );
+    }
+
+    if (synthesizedVideoURL) {
+        return (
+            <SynthesizedResultPreviewContainer>
+                <SynthesizedVideoPreview src={synthesizedVideoURL} controls />
+            </SynthesizedResultPreviewContainer>
+        );
+    }
+
+    return null;
 }
 
 const Container = styled(HeaderPageContainer)``;
@@ -186,7 +239,7 @@ const PreviewContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 25px;
     width: 32%;
     height: 100%;
     font-size: 24px;
@@ -197,11 +250,20 @@ const PreviewContainer = styled.div`
     overflow: hidden;
 `;
 
-const PhotoPreview = styled.img`
+const PhotoPreviewContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
+    height: 80%;
+    overflow: hidden;
+`;
+
+const PhotoPreview = styled.img`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 `;
 
 const VideoPreview = styled.video`
@@ -211,8 +273,15 @@ const VideoPreview = styled.video`
     width: 100%;
 `;
 
-const SynthesizedVideoPreviewContainer = styled(PreviewContainer)`
+const SynthesizedResultPreviewContainer = styled(PreviewContainer)`
     width: 80%;
+`;
+
+const SynthesizedPhotoPreview = styled.img`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 `;
 
 const SynthesizedVideoPreview = styled.video`
@@ -220,4 +289,10 @@ const SynthesizedVideoPreview = styled.video`
     justify-content: center;
     align-items: center;
     height: 100%;
+`;
+
+const CoordText = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
