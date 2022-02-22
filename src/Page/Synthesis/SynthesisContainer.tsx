@@ -1,19 +1,23 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useSynthesisContext } from "./SynthesisProvider";
 import SynthesisGuide from "./SynthesisGuide";
 import { HeaderPageContainer } from "../../StyledComponents";
 
 export default function SynthesisContainer() {
-    const [photoURL, setPhotoURL] = useState<string | undefined>(undefined);
-    const [videoURL, setVideoURL] = useState<string | undefined>(undefined);
-    const videoRef = useRef<HTMLVideoElement>(null);
-
-    const { photo, video, uploadPhoto, uploadVideo, requestSynthesize } =
-        useSynthesisContext();
-
     return (
         <Container>
+            <Header />
+            <InputPreviews />
+            <SynthesisGuide />
+        </Container>
+    );
+}
+
+function Header() {
+    const { handleFileUpload, requestSynthesize } = useSynthesisContext();
+    return (
+        <>
             <SynthesisTitleRow>
                 <SynthesisTitleImg
                     src={require("../../Resources/img/synthesis-icon.png")}
@@ -31,11 +35,70 @@ export default function SynthesisContainer() {
                         src={require("../../Resources/img/file-icon.png")}
                     />
                     <FileInputHorizontalLine />
-                    <FileSelectButton>+ 변환할 파일 선택</FileSelectButton>
+                    {/* label의 for 속성을 이용해 input 기능을 물려받게 하고 input 태그는 안 보이게 설정 */}
+                    <FileSelectButton htmlFor="file">
+                        + 변환할 파일 선택
+                    </FileSelectButton>
+                    <input
+                        id="file"
+                        type="file"
+                        formEncType="multipart/form-data"
+                        accept="image/png, video/*"
+                        style={{ display: "none" }}
+                        onChange={(e) => {
+                            handleFileUpload(e);
+                        }}
+                    />
+                    <button>합성하기</button>
                 </FileInputBoxInnerContainer>
             </FileInputBoxOuterContainer>
-            <SynthesisGuide />
-        </Container>
+        </>
+    );
+}
+
+function InputPreviews() {
+    const {
+        photoURL,
+        videoURL,
+        imageCoord,
+        synthesizedVideoURL,
+        getImageCoord,
+    } = useSynthesisContext();
+
+    return (
+        <PreviewRow show={photoURL != null || videoURL != null}>
+            {synthesizedVideoURL ? (
+                <SynthesizedVideoPreviewContainer>
+                    <SynthesizedVideoPreview
+                        src={synthesizedVideoURL}
+                        controls
+                    />
+                </SynthesizedVideoPreviewContainer>
+            ) : (
+                <>
+                    <PreviewContainer>
+                        {photoURL ? (
+                            <>
+                                <PhotoPreview
+                                    src={photoURL}
+                                    onClick={getImageCoord}
+                                />
+                                {`선택 좌표: ${imageCoord}`}
+                            </>
+                        ) : (
+                            `사진을 업로드 해주세요`
+                        )}
+                    </PreviewContainer>
+                    <PreviewContainer>
+                        {videoURL ? (
+                            <VideoPreview src={videoURL} controls />
+                        ) : (
+                            `동영상을 업로드 해주세요`
+                        )}
+                    </PreviewContainer>
+                </>
+            )}
+        </PreviewRow>
     );
 }
 
@@ -94,7 +157,7 @@ const FileInputHorizontalLine = styled.div`
     margin-bottom: 10px;
 `;
 
-const FileSelectButton = styled.div`
+const FileSelectButton = styled.label`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -108,80 +171,53 @@ const FileSelectButton = styled.div`
     cursor: pointer;
 `;
 
-// {photo ? (
-//     <PhotoPreview src={photoURL} />
-// ) : (
-//     <input
-//         type="file"
-//         formEncType="multipart/form-data"
-//         onChange={(e) => {
-//             if (e.target.files) {
-//                 uploadPhoto(e.target.files[0]);
-//                 setPhotoURL(
-//                     URL.createObjectURL(e.target.files[0])
-//                 );
-//             }
-//         }}
-//     />
-// )}
-// <VideoPreview ref={videoRef} controls />
-// <input
-//     type="file"
-//     formEncType="multipart/form-data"
-//     onChange={(e) => {
-//         if (e.target.files && videoRef.current) {
-//             uploadVideo(e.target.files[0]);
-//             videoRef.current.src = URL.createObjectURL(
-//                 e.target.files[0]
-//             );
-//         }
-//     }}
-// />
-// {/* {video ? (
-//     <VideoPreview ref={videoRef} />
-// ) : (
-//     <input
-//         type="file"
-//         formEncType="multipart/form-data"
-//         onChange={(e) => {
-//             if (e.target.files && videoRef.current) {
-//                 uploadVideo(e.target.files[0]);
-//                 videoRef.current.srcObject =
-//                     e.target.files[0];
-//             }
-//         }}
-//     />
-// )} */}
+const PreviewRow = styled.div<{ show: boolean }>`
+    display: ${(props) => (props.show ? "flex" : "none")};
+    justify-content: space-around;
+    align-items: center;
+    width: 70%;
+    height: 400px;
+    margin: 0px auto;
+    margin-bottom: 40px;
+`;
 
-const FileInputFormRow = styled.form`
+const PreviewContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 85%;
-    height: 360px;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
-`;
-
-const FileInputRow = styled.div`
-    display: flex;
-    justify-content: center;
+    gap: 10px;
+    width: 32%;
+    height: 100%;
+    font-size: 24px;
+    color: white;
+    background-color: gray;
+    padding: 15px;
+    border-radius: 15px;
+    overflow: hidden;
 `;
 
 const PhotoPreview = styled.img`
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 400px;
-    border: 2px solid black;
+    width: 100%;
 `;
 
 const VideoPreview = styled.video`
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 400px;
-    max-height: 400px;
-    border: 2px solid black;
+    width: 100%;
+`;
+
+const SynthesizedVideoPreviewContainer = styled(PreviewContainer)`
+    width: 80%;
+`;
+
+const SynthesizedVideoPreview = styled.video`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 `;

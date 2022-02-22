@@ -3,18 +3,22 @@ import axios from "axios";
 import { ChildrenProp } from "../../Constant";
 
 interface SynthesisContextProp {
-    photo: null | File;
-    video: null | File;
-    uploadPhoto: (photo: File) => void;
-    uploadVideo: (video: File) => void;
+    photoURL: string | null;
+    videoURL: string | null;
+    imageCoord: number[];
+    synthesizedVideoURL: string | null;
+    handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    getImageCoord: (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
     requestSynthesize: () => void;
 }
 
 const InitialSynthesisContext: SynthesisContextProp = {
-    photo: null,
-    video: null,
-    uploadPhoto: (photo: File) => {},
-    uploadVideo: (video: File) => {},
+    photoURL: null,
+    videoURL: null,
+    imageCoord: [0, 0],
+    synthesizedVideoURL: null,
+    handleFileUpload: () => {},
+    getImageCoord: () => {},
     requestSynthesize: () => {},
 };
 
@@ -24,32 +28,54 @@ export const useSynthesisContext = () => useContext(SynthesisContext);
 export default function SynthesisProvider({ children }: ChildrenProp) {
     const [photo, setPhoto] = useState<null | File>(null);
     const [video, setVideo] = useState<null | File>(null);
-    const [synthesizedVideo, setSynthesizedVideo] = useState<null | File>(null);
+    const [photoURL, setPhotoURL] = useState<string | null>(null);
+    const [videoURL, setVideoURL] = useState<string | null>(null);
+    const [imageCoord, setImageCoord] = useState<number[]>([0, 0]);
+    const [synthesizedVideoURL, setSynthesizedVideoURL] = useState<
+        string | null
+    >(null);
+    const imageType = ["image/png"];
 
-    function uploadPhoto(photo: File) {
-        console.log(`${photo.name}이 업로드 되었습니다.`);
-        console.log(photo.type);
-        setPhoto(photo);
-        return;
+    function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        if (!e.target.files || !e.target.files.length) return;
+
+        const inputFile: File = e.target.files[0];
+        if (imageType.includes(inputFile.type)) {
+            if (inputFile.name != "authorized-vitamin-image.png") {
+                alert(
+                    "등록되지 않은 이미지입니다. 관리자에게 제품의 동영상을 촬영하여 보내주시면(ship9136@naver.com), 빠른 시일 내에 제품을 등록하겠습니다."
+                );
+                return;
+            }
+            setPhoto(inputFile);
+            setPhotoURL(URL.createObjectURL(inputFile));
+        } else {
+            setVideo(inputFile);
+            setVideoURL(URL.createObjectURL(inputFile));
+        }
     }
 
-    function uploadVideo(video: File) {
-        console.log(`${video.name}이 업로드 되었습니다.`);
-        console.log(video.type);
-        setVideo(video);
-        return;
+    function getImageCoord(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const xDistance = e.clientX - rect.left;
+        const yDistance = e.clientY - rect.top;
+        const imageWidth = e.currentTarget.offsetWidth;
+        const imageHeigth = e.currentTarget.offsetHeight;
+        const xcoord = Math.round((xDistance / imageWidth) * 10000) / 100;
+        const ycoord = Math.round((yDistance / imageHeigth) * 10000) / 100;
+        setImageCoord([xcoord, ycoord]);
     }
 
     async function requestSynthesize() {
+        if (!photo || !video) return;
+
         const formData = new FormData();
-        if (photo && video) {
-            formData.append("photo", photo);
-            formData.append("video", video);
-        }
+        formData.append("photo", photo);
+        formData.append("video", video);
 
         await axios({
             method: "POST",
-            url: "",
+            url: "http://localhost:5000/synthesis",
             data: formData,
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -58,6 +84,7 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
         })
             .then((res) => {
                 console.log(res.data);
+                setSynthesizedVideoURL(URL.createObjectURL(res.data));
             })
             .catch((error) => {
                 console.log(error);
@@ -78,10 +105,12 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
     }
 
     const synthesisContext = {
-        photo,
-        video,
-        uploadPhoto,
-        uploadVideo,
+        photoURL,
+        videoURL,
+        imageCoord,
+        synthesizedVideoURL,
+        handleFileUpload,
+        getImageCoord,
         requestSynthesize,
     };
 
