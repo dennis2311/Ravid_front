@@ -3,7 +3,11 @@ import axios from "axios";
 import { ChildrenProp } from "../../Constant";
 
 interface SynthesisContextProp {
+<<<<<<< HEAD
     authorizedImageURL: string | null;
+=======
+    authorizedPhotoURL: string | null;
+>>>>>>> 694505a5532c40eec4ee0c62139a5916379a3536
     photoURL: string | null;
     videoURL: string | null;
     authorizedImageCoord: number[];
@@ -20,7 +24,11 @@ interface SynthesisContextProp {
 }
 
 const InitialSynthesisContext: SynthesisContextProp = {
+<<<<<<< HEAD
     authorizedImageURL: null,
+=======
+    authorizedPhotoURL: null,
+>>>>>>> 694505a5532c40eec4ee0c62139a5916379a3536
     photoURL: null,
     videoURL: null,
     authorizedImageCoord: [0, 0],
@@ -40,18 +48,31 @@ const SynthesisContext = createContext(InitialSynthesisContext);
 export const useSynthesisContext = () => useContext(SynthesisContext);
 
 export default function SynthesisProvider({ children }: ChildrenProp) {
+<<<<<<< HEAD
     const [authorizedImage, setAuthorizedImage] = useState<null | File>(null);
     const [photo, setPhoto] = useState<null | File>(null);
     const [video, setVideo] = useState<null | File>(null);
     const [authorizedImageURL, setAuthorizedImageURL] = useState<string | null>(
+=======
+    const [authorizedPhoto, setAuthorizedPhoto] = useState<null | File>(null);
+    const [photo, setPhoto] = useState<null | File>(null);
+    const [video, setVideo] = useState<null | File>(null);
+    const [authorizedPhotoURL, setAuthorizedPhotoURL] = useState<string | null>(
+>>>>>>> 694505a5532c40eec4ee0c62139a5916379a3536
         null
     );
     const [photoURL, setPhotoURL] = useState<string | null>(null);
     const [videoURL, setVideoURL] = useState<string | null>(null);
     const [authorizedImageCoord, setAuthorizedImageCoord] = useState<number[]>([
+<<<<<<< HEAD
         50, 50,
     ]);
     const [imageCoord, setImageCoord] = useState<number[]>([50, 50]);
+=======
+        0, 0,
+    ]);
+    const [imageCoord, setImageCoord] = useState<number[]>([0, 0]);
+>>>>>>> 694505a5532c40eec4ee0c62139a5916379a3536
     const [synthesizedPhotoURL, setSynthesizedPhotoURL] = useState<
         string | null
     >(null);
@@ -68,8 +89,13 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
             // 사진 파일인 경우
             if (isAuthorizedImage(inputFile.name)) {
                 // 등록된 사진인 경우
+<<<<<<< HEAD
                 setAuthorizedImage(inputFile);
                 setAuthorizedImageURL(URL.createObjectURL(inputFile));
+=======
+                setAuthorizedPhoto(inputFile);
+                setAuthorizedPhotoURL(URL.createObjectURL(inputFile));
+>>>>>>> 694505a5532c40eec4ee0c62139a5916379a3536
             } else {
                 // 일반 사진인 경우
                 if (video) {
@@ -81,7 +107,11 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
                 }
             }
         } else {
+<<<<<<< HEAD
             // 동영상 파일인 경우 - 일반 사진은 초기화
+=======
+            // 동영상 파일인 경우
+>>>>>>> 694505a5532c40eec4ee0c62139a5916379a3536
             setPhoto(null);
             setPhotoURL(null);
             setVideo(inputFile);
@@ -90,7 +120,11 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
     }
 
     function isAuthorizedImage(imageName: string) {
+<<<<<<< HEAD
         if (imageName === "authorized-vitamin-image.png") return true;
+=======
+        if (imageName == "authorized-vitamin-image.png") return true;
+>>>>>>> 694505a5532c40eec4ee0c62139a5916379a3536
         return false;
     }
 
@@ -115,6 +149,7 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
         if (!authorizedImage) return;
 
         const formData = new FormData();
+<<<<<<< HEAD
         formData.append("authorized-image", authorizedImage);
 
         if (photo) {
@@ -167,6 +202,31 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
 
     const synthesisContext = {
         authorizedImageURL,
+=======
+        formData.append("photo", photo);
+        formData.append("video", video);
+
+        await axios({
+            method: "POST",
+            url: "http://localhost:5000/synthesis",
+            data: formData,
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+            responseType: "blob",
+        })
+            .then((res) => {
+                console.log(res.data);
+                setSynthesizedVideoURL(URL.createObjectURL(res.data));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const synthesisContext = {
+        authorizedPhotoURL,
+>>>>>>> 694505a5532c40eec4ee0c62139a5916379a3536
         photoURL,
         videoURL,
         authorizedImageCoord,
