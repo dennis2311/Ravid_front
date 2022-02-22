@@ -7,14 +7,20 @@ export const OutestContainer = styled.div`
     display: block;
     width: 100%;
     height: 100%;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    // Firefox
+    scrollbar-width: none;
+    // Chrome, Safari, Opera
+    -webkit-scrollbar {
+        display: none;
+    }
+    overflow-y: auto;
 `;
 
 // Header가 있는 페이지
 export const HeaderPageContainer = styled.div`
     display: block;
-    width: 100%;
-    ${(props) => `height: calc(100% - ${props.theme.header.headerHeight});`};
-    padding: 30px 0px;
 `;
 
 // Header가 없는 페이지

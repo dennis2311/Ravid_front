@@ -4,6 +4,6 @@ import { Length } from "../Values";
 
 export const HeaderTheme = {
     iconColor: Color.mainBlue,
-    headerShadow: Effect.headerShadow,
-    headerHeight: Length.headerHeight,
+    shadow: Effect.headerShadow,
+    height: Length.headerHeight,
 };

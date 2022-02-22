@@ -45,25 +45,36 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
         if (photo && video) {
             formData.append("photo", photo);
             formData.append("video", video);
-            console.log(`name of photo: ${photo.name}`);
-            console.log(`name of video: ${video.name}`);
         }
 
-        try {
-            console.log(`상기 파일들의 전송을 시작합니다`);
-            await axios
-                .post<string>(`http://localhost:5000/synthesis`, formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                })
-                .then((res) => {
-                    // setSynthesizedVideo(res.data);
-                    console.log("성공적으로 응답을 받았습니다");
-                });
-        } catch (error) {
-            console.log(`합성 요청 중 문제가 발생했습니다: ${error}`);
-        }
+        await axios({
+            method: "POST",
+            url: "",
+            data: formData,
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+            responseType: "blob",
+        })
+            .then((res) => {
+                console.log(res.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        // await axios
+        //     .post<string>(`http://localhost:5000/synthesis`, formData, {
+        //         headers: {
+        //             "Content-Type": "multipart/form-data",
+        //         },
+        //     })
+        //     .then((res) => {
+        //         // setSynthesizedVideo(res.data);
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //     });
     }
 
     const synthesisContext = {
