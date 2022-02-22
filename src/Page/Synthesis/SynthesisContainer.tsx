@@ -86,11 +86,12 @@ function InputPreview() {
         authorizedImageURL,
         photoURL,
         videoURL,
-        authorizedImageCoord,
-        imageCoord,
-        setAuthorizedImageCoord,
-        setImageCoord,
-        getImageCoord,
+        authorizedImageCoord01,
+        authorizedImageCoord02,
+        imageCoord01,
+        imageCoord02,
+        handleAuthorizedImageClick,
+        handleImageClick,
     } = useSynthesisContext();
 
     return (
@@ -101,12 +102,11 @@ function InputPreview() {
                         <PhotoPreviewContainer>
                             <PhotoPreview
                                 src={authorizedImageURL}
-                                onClick={(e) => {
-                                    setAuthorizedImageCoord(getImageCoord(e));
-                                }}
+                                onClick={handleAuthorizedImageClick}
                             />
                         </PhotoPreviewContainer>
-                        <CoordText>{`선택 좌표: ${authorizedImageCoord}`}</CoordText>
+                        <CoordText>{`선택 좌표: ${authorizedImageCoord01}`}</CoordText>
+                        <CoordText>{`선택 좌표: ${authorizedImageCoord02}`}</CoordText>
                     </>
                 ) : (
                     `제품 사진 업로드 필요`
@@ -118,12 +118,11 @@ function InputPreview() {
                         <PhotoPreviewContainer>
                             <PhotoPreview
                                 src={photoURL}
-                                onClick={(e) => {
-                                    setImageCoord(getImageCoord(e));
-                                }}
+                                onClick={handleImageClick}
                             />
                         </PhotoPreviewContainer>
-                        <CoordText>{`선택 좌표: ${imageCoord}`}</CoordText>
+                        <CoordText>{`선택 좌표: ${imageCoord01}`}</CoordText>
+                        <CoordText>{`선택 좌표: ${imageCoord02}`}</CoordText>
                     </>
                 )}
                 {videoURL && <VideoPreview src={videoURL} controls />}

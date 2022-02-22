@@ -6,16 +6,19 @@ interface SynthesisContextProp {
     authorizedImageURL: string | null;
     photoURL: string | null;
     videoURL: string | null;
-    authorizedImageCoord: number[];
-    imageCoord: number[];
+    authorizedImageCoord01: number[];
+    authorizedImageCoord02: number[];
+    imageCoord01: number[];
+    imageCoord02: number[];
     synthesizedPhotoURL: string | null;
     synthesizedVideoURL: string | null;
     handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    setAuthorizedImageCoord: (value: number[]) => void;
-    setImageCoord: (value: number[]) => void;
-    getImageCoord: (
+    handleAuthorizedImageClick: (
         e: React.MouseEvent<HTMLImageElement, MouseEvent>
-    ) => number[];
+    ) => void;
+    handleImageClick: (
+        e: React.MouseEvent<HTMLImageElement, MouseEvent>
+    ) => void;
     requestSynthesize: () => void;
 }
 
@@ -23,16 +26,15 @@ const InitialSynthesisContext: SynthesisContextProp = {
     authorizedImageURL: null,
     photoURL: null,
     videoURL: null,
-    authorizedImageCoord: [0, 0],
-    imageCoord: [0, 0],
+    authorizedImageCoord01: [50, 50],
+    authorizedImageCoord02: [50, 50],
+    imageCoord01: [50, 50],
+    imageCoord02: [50, 50],
     synthesizedPhotoURL: null,
     synthesizedVideoURL: null,
     handleFileUpload: () => {},
-    setAuthorizedImageCoord: () => {},
-    setImageCoord: () => {},
-    getImageCoord: () => {
-        return [];
-    },
+    handleAuthorizedImageClick: () => {},
+    handleImageClick: () => {},
     requestSynthesize: () => {},
 };
 
@@ -48,10 +50,17 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
     );
     const [photoURL, setPhotoURL] = useState<string | null>(null);
     const [videoURL, setVideoURL] = useState<string | null>(null);
-    const [authorizedImageCoord, setAuthorizedImageCoord] = useState<number[]>([
-        50, 50,
-    ]);
-    const [imageCoord, setImageCoord] = useState<number[]>([50, 50]);
+    const [authorizedImageEvenClicked, setAuthorizedImageEvenClicked] =
+        useState<boolean>(true);
+    const [authorizedImageCoord01, setAuthorizedImageCoord01] = useState<
+        number[]
+    >([50, 50]);
+    const [authorizedImageCoord02, setAuthorizedImageCoord02] = useState<
+        number[]
+    >([50, 50]);
+    const [imageEvenClicked, setImageEvenClicked] = useState<boolean>(true);
+    const [imageCoord01, setImageCoord01] = useState<number[]>([50, 50]);
+    const [imageCoord02, setImageCoord02] = useState<number[]>([50, 50]);
     const [synthesizedPhotoURL, setSynthesizedPhotoURL] = useState<
         string | null
     >(null);
@@ -100,6 +109,30 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
         );
     }
 
+    function handleAuthorizedImageClick(
+        e: React.MouseEvent<HTMLImageElement, MouseEvent>
+    ) {
+        if (authorizedImageEvenClicked) {
+            setAuthorizedImageCoord01(getImageCoord(e));
+            setAuthorizedImageEvenClicked(!authorizedImageEvenClicked);
+        } else {
+            setAuthorizedImageCoord02(getImageCoord(e));
+            setAuthorizedImageEvenClicked(!authorizedImageEvenClicked);
+        }
+    }
+
+    function handleImageClick(
+        e: React.MouseEvent<HTMLImageElement, MouseEvent>
+    ) {
+        if (imageEvenClicked) {
+            setImageCoord01(getImageCoord(e));
+            setImageEvenClicked(!imageEvenClicked);
+        } else {
+            setImageCoord02(getImageCoord(e));
+            setImageEvenClicked(!imageEvenClicked);
+        }
+    }
+
     function getImageCoord(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
         const rect = e.currentTarget.getBoundingClientRect();
         const xDistance = e.clientX - rect.left;
@@ -124,9 +157,14 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
                 .post("http://localhost:5000/synthesis-photo", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                        authorizedImageCoord:
-                            JSON.stringify(authorizedImageCoord),
-                        imageCoord: JSON.stringify(imageCoord),
+                        authorizedImageCoord01: JSON.stringify(
+                            authorizedImageCoord01
+                        ),
+                        authorizedImageCoord02: JSON.stringify(
+                            authorizedImageCoord02
+                        ),
+                        imageCoord01: JSON.stringify(imageCoord01),
+                        imageCoord02: JSON.stringify(imageCoord02),
                     },
                     responseType: "blob",
                 })
@@ -149,8 +187,12 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
                 .post("http://localhost:5000/synthesis-video", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                        authorizedImageCoord:
-                            JSON.stringify(authorizedImageCoord),
+                        authorizedImageCoord01: JSON.stringify(
+                            authorizedImageCoord01
+                        ),
+                        authorizedImageCoord02: JSON.stringify(
+                            authorizedImageCoord02
+                        ),
                     },
                     responseType: "blob",
                 })
@@ -169,14 +211,15 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
         authorizedImageURL,
         photoURL,
         videoURL,
-        authorizedImageCoord,
-        imageCoord,
+        authorizedImageCoord01,
+        authorizedImageCoord02,
+        imageCoord01,
+        imageCoord02,
         synthesizedPhotoURL,
         synthesizedVideoURL,
         handleFileUpload,
-        setAuthorizedImageCoord,
-        setImageCoord,
-        getImageCoord,
+        handleAuthorizedImageClick,
+        handleImageClick,
         requestSynthesize,
     };
 
