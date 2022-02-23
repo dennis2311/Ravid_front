@@ -154,24 +154,28 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
             formData.append("photo", photo);
 
             await axios
-                .post("http://localhost:5000/synthesis-photo", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                        authorizedImageCoord01: JSON.stringify(
-                            authorizedImageCoord01
-                        ),
-                        authorizedImageCoord02: JSON.stringify(
-                            authorizedImageCoord02
-                        ),
-                        imageCoord01: JSON.stringify(imageCoord01),
-                        imageCoord02: JSON.stringify(imageCoord02),
-                    },
-                    responseType: "blob",
-                })
+                .post<File | null>(
+                    "http://localhost:5000/synthesis-photo",
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            authorizedImageCoord01: JSON.stringify(
+                                authorizedImageCoord01
+                            ),
+                            authorizedImageCoord02: JSON.stringify(
+                                authorizedImageCoord02
+                            ),
+                            imageCoord01: JSON.stringify(imageCoord01),
+                            imageCoord02: JSON.stringify(imageCoord02),
+                        },
+                        responseType: "blob",
+                    }
+                )
                 .then((res) => {
-                    console.log(res.data);
-                    console.log(URL.createObjectURL(res.data));
-                    setSynthesizedPhotoURL(URL.createObjectURL(res.data));
+                    if (res.data) {
+                        setSynthesizedPhotoURL(URL.createObjectURL(res.data));
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
@@ -184,20 +188,26 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
             formData.append("video", video);
 
             await axios
-                .post("http://localhost:5000/synthesis-video", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                        authorizedImageCoord01: JSON.stringify(
-                            authorizedImageCoord01
-                        ),
-                        authorizedImageCoord02: JSON.stringify(
-                            authorizedImageCoord02
-                        ),
-                    },
-                    responseType: "blob",
-                })
+                .post<File | null>(
+                    "http://localhost:5000/synthesis-video",
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            authorizedImageCoord01: JSON.stringify(
+                                authorizedImageCoord01
+                            ),
+                            authorizedImageCoord02: JSON.stringify(
+                                authorizedImageCoord02
+                            ),
+                        },
+                        responseType: "blob",
+                    }
+                )
                 .then((res) => {
-                    setSynthesizedVideoURL(URL.createObjectURL(res.data));
+                    if (res.data) {
+                        setSynthesizedVideoURL(URL.createObjectURL(res.data));
+                    }
                 })
                 .catch((error) => {
                     console.log(error);

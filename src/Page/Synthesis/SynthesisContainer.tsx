@@ -139,6 +139,9 @@ function ResultPreview() {
         return (
             <SynthesizedResultPreviewContainer>
                 <SynthesizedPhotoPreview src={synthesizedPhotoURL} />
+                <a href={synthesizedPhotoURL} download="synthesized-img">
+                    <button>사진 다운로드</button>
+                </a>
             </SynthesizedResultPreviewContainer>
         );
     }
@@ -147,6 +150,9 @@ function ResultPreview() {
         return (
             <SynthesizedResultPreviewContainer>
                 <SynthesizedVideoPreview src={synthesizedVideoURL} controls />
+                <a href={synthesizedVideoURL} download="synthesized-vid">
+                    <button>동영상 다운로드</button>
+                </a>
             </SynthesizedResultPreviewContainer>
         );
     }
