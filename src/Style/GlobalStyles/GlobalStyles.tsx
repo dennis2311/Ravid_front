@@ -13,7 +13,7 @@ const GlobalStyles = createGlobalStyle`
         overflow:hidden;
     }
     html{
-        min-width: 1080px;
+        min-width: 1280px;
         min-height: 720px;
     }
     #root{
