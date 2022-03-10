@@ -11,6 +11,7 @@ export default function SynthsisPreviewsInput() {
         authorizedImageCoord02,
         imageCoord01,
         imageCoord02,
+        synthesizing,
         handleAuthorizedImageClick,
         handleImageClick,
     } = useSynthesisContext();
@@ -33,6 +34,9 @@ export default function SynthsisPreviewsInput() {
                     `제품 사진 업로드 필요`
                 )}
             </Container>
+            {synthesizing && (
+                <SynthesizingInfoText>합성 중입니다</SynthesizingInfoText>
+            )}
             <Container>
                 {photoURL && (
                     <>
@@ -78,6 +82,10 @@ export const Container = styled.div`
     padding: 15px;
     border-radius: 15px;
     overflow: hidden;
+`;
+
+const SynthesizingInfoText = styled.span`
+    font-family: "NexonGothicBold";
 `;
 
 const PreviewContainer = styled.div`

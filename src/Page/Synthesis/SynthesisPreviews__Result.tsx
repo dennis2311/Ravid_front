@@ -33,18 +33,20 @@ export default function SynthesisPreviewsResult() {
 
 const SynthesizedResultPreviewContainer = styled(Container)`
     width: 80%;
+    padding: 15px;
 `;
 
 const SynthesizedPhotoPreview = styled.img`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    width: 100%;
+    height: fit-content;
 `;
 
 const SynthesizedVideoPreview = styled.video`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    width: 100%;
 `;

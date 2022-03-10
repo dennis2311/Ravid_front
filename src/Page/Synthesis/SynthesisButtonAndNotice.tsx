@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { useSynthesisContext } from "./SynthesisProvider";
 
 export default function SynthesisButtonAndNotice() {
+    const { synthesizing } = useSynthesisContext();
+
     return (
         <Container>
             <RequestContactMessageContainer>
@@ -14,7 +17,11 @@ export default function SynthesisButtonAndNotice() {
                     부탁드립니다.
                 </RequestContactMessage>
             </RequestContactMessageContainer>
-            <SubmitButton type="submit" form="synthesis">
+            <SubmitButton
+                type="submit"
+                form="synthesis"
+                disabled={synthesizing}
+            >
                 합성하기
             </SubmitButton>
             <RequestContactMessageContainer />
@@ -38,6 +45,9 @@ const SubmitButton = styled.button`
     padding: 10px 24px;
     font-family: "NanumGothic";
     font-weight: bold;
+    :disabled {
+        cursor: auto;
+    }
 `;
 
 const RequestContactMessageContainer = styled.div`

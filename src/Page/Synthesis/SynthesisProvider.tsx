@@ -13,6 +13,7 @@ interface SynthesisContextProp {
     authorizedImageCoord02: number[];
     imageCoord01: number[];
     imageCoord02: number[];
+    synthesizing: boolean;
     synthesizedPhotoURL: string | null;
     synthesizedVideoURL: string | null;
     dialogType: string | null;
@@ -50,6 +51,7 @@ const InitialSynthesisContext: SynthesisContextProp = {
     authorizedImageCoord02: [50, 50],
     imageCoord01: [50, 50],
     imageCoord02: [50, 50],
+    synthesizing: false,
     synthesizedPhotoURL: null,
     synthesizedVideoURL: null,
     dialogType: null,
@@ -95,6 +97,8 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
     const [authorizedImageEvenClicked, setAuthorizedImageEvenClicked] =
         useState<boolean>(true);
     const [imageEvenClicked, setImageEvenClicked] = useState<boolean>(true);
+    // 변환 중 상태
+    const [synthesizing, setSynthesizing] = useState<boolean>(false);
     // result 파일 변환 URL
     const [synthesizedPhotoURL, setSynthesizedPhotoURL] = useState<
         string | null
@@ -216,6 +220,8 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
     async function requestSynthesize() {
         if (!registeredImage) return;
 
+        setSynthesizing(true);
+
         const formData = new FormData();
         formData.append("authorized-image", registeredImage);
 
@@ -303,6 +309,7 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
         authorizedImageCoord02,
         imageCoord01,
         imageCoord02,
+        synthesizing,
         synthesizedPhotoURL,
         synthesizedVideoURL,
         dialogType,
