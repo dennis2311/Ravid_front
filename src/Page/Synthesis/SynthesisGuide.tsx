@@ -119,7 +119,7 @@ const GuideTextIndex = styled.span`
 `;
 
 const GuideText = styled.span`
-    font-size: 20px;
+    font-size: 14px;
     line-height: 24px;
     color: black;
     font-family: "NanumGothic";
