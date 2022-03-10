@@ -1,19 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { StylelessButton } from "../../../StyledComponents";
 import { useSynthesisContext } from "../SynthesisProvider";
 
 export default function SynthesisDialogRegistration() {
-    const { dialogType } = useSynthesisContext();
+    const {
+        dialogType,
+        registeringImages,
+        setDialogType,
+        setRegisteringImages,
+        requestImageRegister,
+    } = useSynthesisContext();
+    const [productIdInput, setProductIdInput] = useState<string>("");
+    const [emailInput, setEmailInput] = useState<string>("");
 
     if (dialogType !== "registration") return null;
 
     return (
         <Container>
-            <ProductIdTagText>제품 아이디</ProductIdTagText>
-            <ProductIdInput />
+            <ProductIdTagTextRow>
+                <ProductIdTagText>제품 아이디</ProductIdTagText>
+                <DialogCloseIcon
+                    onClick={() => {
+                        setDialogType(null);
+                    }}
+                >
+                    X
+                </DialogCloseIcon>
+            </ProductIdTagTextRow>
+            <ProductIdInput
+                value={productIdInput}
+                onChange={(e) => {
+                    setProductIdInput(e.target.value);
+                }}
+            />
             <EmailTagText>등록 여부를 전송 받기 위한 이메일 주소</EmailTagText>
-            <EmailInput />
+            <EmailInput
+                type="email"
+                value={emailInput}
+                onChange={(e) => {
+                    setEmailInput(e.target.value);
+                }}
+            />
             <ImageUploadRow>
                 <ImageUploadContainer>
                     <ImageUploadInputLabel htmlFor="product-image">
@@ -24,13 +52,33 @@ export default function SynthesisDialogRegistration() {
                         type="file"
                         formEncType="multipart/form-data"
                         accept="image/*"
+                        multiple
                         style={{ display: "none" }}
                         onChange={(e) => {
-                            // handleFileUpload(e);
+                            if (!e.target.files) return;
+                            if (e.target.files.length !== 5) {
+                                alert("5장의 이미지를 등록해주세요");
+                                return;
+                            }
+                            const registeringFile: File[] = [];
+                            registeringFile.push(e.target.files[0]);
+                            registeringFile.push(e.target.files[1]);
+                            registeringFile.push(e.target.files[2]);
+                            registeringFile.push(e.target.files[3]);
+                            registeringFile.push(e.target.files[4]);
+                            setRegisteringImages(registeringFile);
                         }}
                     />
                     <UploadedImageListContainer>
-                        {/* <UploadedImageTitle>sample.png</UploadedImageTitle> */}
+                        {registeringImages.map((img, index) => {
+                            return (
+                                <UploadedImageTitle
+                                    key={`${index}:${img.name}`}
+                                >
+                                    {img.name}
+                                </UploadedImageTitle>
+                            );
+                        })}
                     </UploadedImageListContainer>
                 </ImageUploadContainer>
                 <ImageUploadGuideContainer>
@@ -43,7 +91,21 @@ export default function SynthesisDialogRegistration() {
                 </ImageUploadGuideContainer>
             </ImageUploadRow>
             <RegisterButtonRow>
-                <RegisterButton>제품 등록</RegisterButton>
+                <RegisterButton
+                    disabled={
+                        !productIdInput ||
+                        !emailInput ||
+                        !registeringImages.length
+                    }
+                    onClick={() => {
+                        requestImageRegister({
+                            id: productIdInput,
+                            email: emailInput,
+                        });
+                    }}
+                >
+                    제품 등록
+                </RegisterButton>
             </RegisterButtonRow>
         </Container>
     );
@@ -60,21 +122,44 @@ const Container = styled.div`
     border: 2px solid gray;
     border-radius: 30px;
     z-index: 100;
+    * {
+        font-family: "NanumGothic";
+        font-weight: bold;
+    }
+`;
+
+const ProductIdTagTextRow = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    margin-bottom: 12px;
 `;
 
 const ProductIdTagText = styled.span`
     font-size: 21px;
     color: #3a3838;
-    margin-bottom: 12px;
+`;
+
+const DialogCloseIcon = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-bottom: 18px;
+    cursor: pointer;
 `;
 
 const ProductIdInput = styled.input`
     height: 40px;
     margin-bottom: 40px;
+    padding: 0px 12px;
     border: 1px solid #d9d9d9;
 `;
 
-const EmailTagText = styled(ProductIdTagText)``;
+const EmailTagText = styled(ProductIdTagText)`
+    margin-bottom: 12px;
+`;
 
 const EmailInput = styled(ProductIdInput)``;
 
@@ -149,4 +234,9 @@ const RegisterButton = styled(StylelessButton)`
     color: white;
     background-color: #3b3838;
     border-radius: 32px;
+    :disabled {
+        color: #3b3838;
+        background-color: gray;
+        cursor: auto;
+    }
 `;

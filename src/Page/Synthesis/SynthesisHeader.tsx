@@ -26,4 +26,6 @@ const SynthesisTitleImg = styled.img`
 
 const SynthesisTitle = styled.span`
     font-size: 32px;
+    font-family: "NanumGothicExtraBold";
+    font-weight: bold;
 `;

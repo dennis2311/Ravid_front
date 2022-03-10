@@ -76,10 +76,13 @@ const GuideTextGhostButton = styled.div`
     padding: 15px 25px;
     border: 2px solid #00518e;
     border-radius: 32px;
+    font-family: "NanumGothic";
+    font-weight: bold;
 `;
 
 const GuideText = styled.span`
     font-size: 32px;
+    font-family: "NexonGothicBold";
 `;
 
 const GuideImgsRow = styled.div`
@@ -89,7 +92,7 @@ const GuideImgsRow = styled.div`
     height: fit-content;
     padding: 0px 70px;
     margin: 0px auto;
-    margin-bottom: 320px;
+    margin-bottom: 240px;
 `;
 
 const GuideImgContainer = styled.div`
@@ -120,6 +123,8 @@ const GuideImgContentNumberLineContainer = styled.div`
     align-items: center;
     width: 100%;
     gap: 10px;
+    font-family: "NanumGothic";
+    font-weight: bold;
 `;
 
 const GuideImgContentHorizontalLine = styled.div`
@@ -137,4 +142,6 @@ const GuideImgTextContainer = styled.div`
 
 const GuideImgText = styled.span`
     line-height: 20px;
+    font-family: "NanumGothic";
+    font-weight: bold;
 `;

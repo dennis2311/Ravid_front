@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useSynthesisContext } from "./SynthesisProvider";
-import { PreviewContainer } from "./SynthesisPreviews__Input";
+import { Container } from "./SynthesisPreviews__Input";
 
 export default function SynthesisPreviewsResult() {
     const { synthesizedPhotoURL, synthesizedVideoURL } = useSynthesisContext();
@@ -31,7 +31,7 @@ export default function SynthesisPreviewsResult() {
     return null;
 }
 
-const SynthesizedResultPreviewContainer = styled(PreviewContainer)`
+const SynthesizedResultPreviewContainer = styled(Container)`
     width: 80%;
 `;
 

@@ -21,7 +21,7 @@ export default function Footer() {
 const Container = styled.div`
     display: flex;
     flex-direction: column;
-    background-color: ${(props) => props.theme.footer.backgroundColor};
+    background-color: #f2f5f8;
     padding: 60px 160px;
     margin-top: 360px;
 `;
@@ -41,10 +41,13 @@ const FooterIconImg = styled.img`
 const FooterIconText = styled.span`
     font-size: 24px;
     color: ${(props) => props.theme.color.iconBlue};
+    font-family: "NanumGothicExtraBold";
+    font-weight: bold;
 `;
 
 const FooterText = styled.span`
     font-size: 16px;
     line-height: 30px;
     color: gray;
+    font-family: "NanumGothic";
 `;

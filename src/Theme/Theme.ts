@@ -10,6 +10,7 @@ const Theme = {
     // Page
     synthesis: SynthesisTheme,
     home: HomeTheme,
+    nanum: "NanumGothic",
 };
 
 export default Theme;

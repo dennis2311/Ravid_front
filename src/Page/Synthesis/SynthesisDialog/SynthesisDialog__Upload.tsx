@@ -1,17 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useSynthesisContext } from "../SynthesisProvider";
 import { StylelessButton } from "../../../StyledComponents";
 
 export default function SynthesisDialogUpload() {
-    const { photo, video, dialogType, handleFileUpload, setDialogType } =
+    const { dialogType, handleFileUpload, setDialogType } =
         useSynthesisContext();
+    const [sourceFile, setSourceFile] = useState<File | null>(null);
 
     if (dialogType !== "upload") return null;
 
     return (
         <Container>
-            <ProductIdTagText>제품 아이디</ProductIdTagText>
+            <ProductIdTagTextRow>
+                <ProductIdTagText>제품 아이디</ProductIdTagText>
+                <DialogCloseIcon
+                    onClick={() => {
+                        setDialogType(null);
+                    }}
+                >
+                    X
+                </DialogCloseIcon>
+            </ProductIdTagTextRow>
             <ProductIdInputRow>
                 <ProductIdInput />
                 <GetRegisteredImagesButton>
@@ -38,15 +48,28 @@ export default function SynthesisDialogUpload() {
                     formEncType="multipart/form-data"
                     accept="image/* video/*"
                     style={{ display: "none" }}
-                    onChange={handleFileUpload}
+                    onChange={(e) => {
+                        if (e.target.files) {
+                            setSourceFile(e.target.files[0]);
+                        }
+                    }}
                 />
             </UploadSynthesisSourceRow>
             <UploadedSynthesisSourceTitle>
-                {photo && photo.name}
-                {video && video.name}
+                {sourceFile?.name}
             </UploadedSynthesisSourceTitle>
             <UploadButtonRow>
-                <UploadButton onClick={() => {}}>선택 완료</UploadButton>
+                <UploadButton
+                    disabled={!sourceFile}
+                    onClick={() => {
+                        if (sourceFile) {
+                            handleFileUpload(sourceFile);
+                        }
+                        setDialogType(null);
+                    }}
+                >
+                    선택 완료
+                </UploadButton>
             </UploadButtonRow>
         </Container>
     );
@@ -63,12 +86,33 @@ const Container = styled.div`
     border: 2px solid gray;
     border-radius: 30px;
     z-index: 100;
+    * {
+        font-family: "NanumGothic";
+        font-weight: bold;
+    }
+`;
+
+const ProductIdTagTextRow = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    margin-bottom: 12px;
 `;
 
 const ProductIdTagText = styled.span`
     font-size: 21px;
     color: #3a3838;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
+`;
+
+const DialogCloseIcon = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-bottom: 18px;
+    cursor: pointer;
 `;
 
 const ProductIdInputRow = styled.div`
@@ -86,6 +130,7 @@ const ProductIdInput = styled.input`
     height: 100%;
     color: #3a3838;
     background-color: white;
+    padding: 0px 12px;
     border: 1px solid #d9d9d9;
 `;
 
@@ -165,4 +210,9 @@ const UploadButton = styled(StylelessButton)`
     color: white;
     background-color: #3b3838;
     border-radius: 32px;
+    :disabled {
+        color: #3b3838;
+        background-color: gray;
+        cursor: auto;
+    }
 `;

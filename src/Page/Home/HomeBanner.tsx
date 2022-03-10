@@ -29,7 +29,7 @@ const Container = styled.div`
     font-size: 30px;
     color: white;
     margin: 0px auto;
-    margin-bottom: 200px;
+    margin-bottom: 140px;
 `;
 
 const MainBannerImage = styled.img`
@@ -48,6 +48,8 @@ const BannerContentsContainer = styled.div`
     justify-content: center;
     align-items: center;
     gap: 24px;
+    font-family: "NanumGothicExtraBold";
+    font-weight: bold;
 `;
 
 const LinkToSynthesisButton = styled(StylelessButton)`
@@ -57,4 +59,6 @@ const LinkToSynthesisButton = styled(StylelessButton)`
     border-radius: 24px;
     color: white;
     background-color: black;
+    font-family: "NanumGothicExtraBold";
+    font-weight: bold;
 `;

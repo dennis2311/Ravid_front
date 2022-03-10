@@ -84,7 +84,7 @@ const GuideCard = styled.div`
     width: 24%;
     height: 100%;
     font-size: 24px;
-    background-color: ${(props) => props.theme.color.guideCardGray};
+    background-color: #f2f5f8;
     padding: 35px 50px 15px 50px;
     border-radius: 20px;
 `;
@@ -113,8 +113,14 @@ const GuideTextIndex = styled.span`
     font-size: 20px;
     line-height: 24px;
     color: ${(props) => props.theme.color.mainLightNavy};
+    font-family: "NanumGothic";
+    font-weight: bold;
+    margin-bottom: 10px;
 `;
 
-const GuideText = styled(GuideTextIndex)`
+const GuideText = styled.span`
+    font-size: 20px;
+    line-height: 24px;
     color: black;
+    font-family: "NanumGothic";
 `;

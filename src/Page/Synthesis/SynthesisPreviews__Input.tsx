@@ -17,43 +17,54 @@ export default function SynthsisPreviewsInput() {
 
     return (
         <>
-            <PreviewContainer>
+            <Container>
                 {registeredImageURL ? (
                     <>
-                        <PhotoPreviewContainer>
+                        <PreviewContainer>
                             <PhotoPreview
                                 src={registeredImageURL}
                                 onClick={handleAuthorizedImageClick}
                             />
-                        </PhotoPreviewContainer>
+                        </PreviewContainer>
                         <CoordText>{`선택 좌표: ${authorizedImageCoord01}`}</CoordText>
                         <CoordText>{`선택 좌표: ${authorizedImageCoord02}`}</CoordText>
                     </>
                 ) : (
                     `제품 사진 업로드 필요`
                 )}
-            </PreviewContainer>
-            <PreviewContainer>
+            </Container>
+            <Container>
                 {photoURL && (
                     <>
-                        <PhotoPreviewContainer>
+                        <PreviewContainer>
                             <PhotoPreview
                                 src={photoURL}
                                 onClick={handleImageClick}
                             />
-                        </PhotoPreviewContainer>
+                        </PreviewContainer>
                         <CoordText>{`선택 좌표: ${imageCoord01}`}</CoordText>
                         <CoordText>{`선택 좌표: ${imageCoord02}`}</CoordText>
                     </>
                 )}
-                {videoURL && <VideoPreview src={videoURL} controls />}
+                {videoURL && (
+                    <>
+                        <PreviewContainer>
+                            <VideoPreview
+                                src={videoURL}
+                                onClick={handleImageClick}
+                            />
+                        </PreviewContainer>
+                        <CoordText>{`선택 좌표: ${imageCoord01}`}</CoordText>
+                        <CoordText>{`선택 좌표: ${imageCoord02}`}</CoordText>
+                    </>
+                )}
                 {!photoURL && !videoURL && `사진/동영상 업로드 필요`}
-            </PreviewContainer>
+            </Container>
         </>
     );
 }
 
-export const PreviewContainer = styled.div`
+export const Container = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -69,20 +80,19 @@ export const PreviewContainer = styled.div`
     overflow: hidden;
 `;
 
-const PhotoPreviewContainer = styled.div`
+const PreviewContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 80%;
-    overflow: hidden;
 `;
 
 const PhotoPreview = styled.img`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    width: 100%;
 `;
 
 const VideoPreview = styled.video`

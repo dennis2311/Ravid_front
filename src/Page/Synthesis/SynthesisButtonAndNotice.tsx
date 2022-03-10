@@ -36,6 +36,8 @@ const Container = styled.div`
 
 const SubmitButton = styled.button`
     padding: 10px 24px;
+    font-family: "NanumGothic";
+    font-weight: bold;
 `;
 
 const RequestContactMessageContainer = styled.div`
@@ -48,4 +50,5 @@ const RequestContactMessageContainer = styled.div`
 
 const RequestContactMessage = styled.span`
     line-height: 20px;
+    font-family: "NanumGothic";
 `;

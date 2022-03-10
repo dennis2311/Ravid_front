@@ -63,6 +63,8 @@ const BannerTextGhostButton = styled.div`
     margin-bottom: 28px;
     border: 2.5px solid #00518e;
     border-radius: 32px;
+    font-family: "NanumGothic";
+    font-weight: bold;
 `;
 
 const BannerTitleTextContainer = styled.div`
@@ -75,6 +77,8 @@ const BannerTitleText = styled.span`
     font-size: 40px;
     line-height: 54px;
     color: black;
+    font-family: "NanumGothicExtraBold";
+    font-weight: bold;
 `;
 
 const BannerContentTextContainer = styled.div`
@@ -86,4 +90,5 @@ const BannerContentText = styled.span`
     font-size: 16px;
     line-height: 21px;
     color: black;
+    font-family: "NanumGothic";
 `;

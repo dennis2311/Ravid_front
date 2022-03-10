@@ -58,7 +58,7 @@ const Container = styled.header`
     display: flex;
     justify-content: space-between;
     height: ${(props) => props.theme.header.height};
-    background-color: ${(props) => props.theme.color.guideCardGray};
+    background-color: #f2f5f8;
     margin-bottom: 50px;
 `;
 
@@ -77,6 +77,8 @@ const HeaderCenterColumn = styled(HeaderColumn)`
     display: flex;
     gap: 80px;
     width: fit-content;
+    font-family: "NexonGothicBold";
+    font-weight: bold;
 `;
 
 const HeaderIconImg = styled.img`
@@ -87,6 +89,8 @@ const HeaderIconImg = styled.img`
 const HeaderIconText = styled.span`
     font-size: 24px;
     color: ${(props) => props.theme.color.iconBlue};
+    font-family: "NexonGothicBold";
+    font-weight: bold;
 `;
 
 const LinkButton = styled.div`

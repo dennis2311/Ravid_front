@@ -20,9 +20,6 @@ const GlobalStyles = createGlobalStyle`
         position:relative;
         overflow:auto;
     }
-    #root * {
-        font-family: "NexonGothicBold";
-    }
 `;
 
 export default GlobalStyles;

@@ -105,6 +105,8 @@ const FileSelectButton = styled.div`
     color: #3a3838;
     background-color: white;
     border-radius: 30px;
+    font-family: "NanumGothic";
+    font-weight: bold;
     box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
     cursor: pointer;
 `;
