@@ -4,7 +4,6 @@ import { ChildrenProp } from "../../Constant";
 
 interface SynthesisContextProp {
     registeringImages: File[];
-    registeredImages: File[];
     registeredImageURL: string | null;
     photo: File | null;
     video: File | null;
@@ -26,7 +25,7 @@ interface SynthesisContextProp {
         id: string;
         email: string;
     }) => void;
-    getRegisteredImages: ({ id }: { id: string }) => void;
+    setRegisteredProductId: (id: string) => void;
     handleRegisteredImageUpload: (inputFile: File) => void;
     handleFileUpload: (inputFile: File) => void;
     handleAuthorizedImageClick: (
@@ -42,7 +41,6 @@ interface SynthesisContextProp {
 
 const InitialSynthesisContext: SynthesisContextProp = {
     registeringImages: [],
-    registeredImages: [],
     registeredImageURL: null,
     photo: null,
     video: null,
@@ -58,7 +56,7 @@ const InitialSynthesisContext: SynthesisContextProp = {
     setDialogType: () => {},
     setRegisteringImages: () => {},
     requestImageRegister: () => {},
-    getRegisteredImages: () => {},
+    setRegisteredProductId: () => {},
     handleRegisteredImageUpload: () => {},
     handleFileUpload: () => {},
     handleAuthorizedImageClick: () => {},
@@ -74,8 +72,8 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
     const [dialogType, setDialogType] = useState<string | null>(null);
     // 등록할 제품 이미지들
     const [registeringImages, setRegisteringImages] = useState<File[]>([]);
-    // 등록된 제품 이미지들 (서버에 요청해서 받아옴)
-    const [registeredImages, setRegisteredImages] = useState<File[]>([]);
+    // 가져온 제품 이미지 아이디
+    const [registeredProductId, setRegisteredProductId] = useState<string>("");
     // input 파일 및 변환된 URL
     const [registeredImage, setRegisteredImage] = useState<null | File>(null);
     const [registeredImageURL, setRegisteredImageURL] = useState<string | null>(
@@ -144,58 +142,6 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
                     "죄송합니다. 제품 등록 중 오류가 발생했습니다. 홈페이지 하단의 연락처로 연락해 주시면 신속히 처리하겠습니다."
                 );
                 return;
-            });
-        return;
-    }
-
-    async function getRegisteredImages({ id }: { id: string }) {
-        if (!id) {
-            alert("찾으실 제품 아이디를 입력해주세요");
-            return;
-        }
-
-        // await axios
-        //     .get<File | null>(
-        //         `http://localhost:5000/registered-image?product-id=${id}&product-index=0`,
-        //         {
-        //             responseType: "blob",
-        //         }
-        //     )
-        //     .then((res) => {
-        //         if (res.data) {
-        //             console.log(res.data.name);
-        //         }
-        //     });
-
-        const getImage = async (index: number) =>
-            await axios
-                .get<File>(
-                    `http://localhost:5000/registered-image?product-id=${id}&product-index=${index}`,
-                    { headers: { responseType: "blob" } }
-                )
-                .then((res) => {
-                    console.log(res.data.name);
-                    return res.data;
-                });
-
-        const images = await axios
-            .all([
-                getImage(0),
-                getImage(1),
-                getImage(2),
-                getImage(3),
-                getImage(4),
-            ])
-            .then((res) => {
-                console.dir(res);
-                return res;
-            })
-            .catch((err) => {
-                console.log(err);
-                alert(
-                    "죄송합니다. 등록된 제품을 받아오는 중 오류가 발생했습니다. 홈페이지 하단의 연락처로 연락해 주시면 신속히 처리하겠습니다."
-                );
-                return [];
             });
         return;
     }
@@ -292,6 +238,7 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
                             ),
                             imageCoord01: JSON.stringify(imageCoord01),
                             imageCoord02: JSON.stringify(imageCoord02),
+                            imageId: JSON.stringify(registeredProductId),
                         },
                         responseType: "blob",
                     }
@@ -327,6 +274,7 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
                             ),
                             imageCoord01: JSON.stringify(imageCoord01),
                             imageCoord02: JSON.stringify(imageCoord02),
+                            imageId: JSON.stringify(registeredProductId),
                         },
                         responseType: "blob",
                     }
@@ -346,7 +294,6 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
 
     const synthesisContext = {
         registeringImages,
-        registeredImages,
         registeredImageURL,
         photo,
         video,
@@ -362,7 +309,7 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
         setDialogType,
         setRegisteringImages,
         requestImageRegister,
-        getRegisteredImages,
+        setRegisteredProductId,
         handleRegisteredImageUpload,
         handleFileUpload,
         handleAuthorizedImageClick,

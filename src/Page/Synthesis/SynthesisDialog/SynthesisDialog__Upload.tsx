@@ -7,6 +7,7 @@ import { StylelessButton } from "../../../StyledComponents";
 export default function SynthesisDialogUpload() {
     const {
         dialogType,
+        setRegisteredProductId,
         handleRegisteredImageUpload,
         handleFileUpload,
         setDialogType,
@@ -71,7 +72,12 @@ export default function SynthesisDialogUpload() {
                             .then((res) => {
                                 if (res.data) {
                                     setRegisteredImage00(res.data);
+                                } else {
+                                    setRegisteredImage00(null);
                                 }
+                            })
+                            .catch((error) => {
+                                setRegisteredImage00(null);
                             });
                         axios
                             .get<File | null>(
@@ -83,7 +89,12 @@ export default function SynthesisDialogUpload() {
                             .then((res) => {
                                 if (res.data) {
                                     setRegisteredImage01(res.data);
+                                } else {
+                                    setRegisteredImage01(null);
                                 }
+                            })
+                            .catch((error) => {
+                                setRegisteredImage01(null);
                             });
                         axios
                             .get<File | null>(
@@ -95,7 +106,12 @@ export default function SynthesisDialogUpload() {
                             .then((res) => {
                                 if (res.data) {
                                     setRegisteredImage02(res.data);
+                                } else {
+                                    setRegisteredImage02(null);
                                 }
+                            })
+                            .catch((error) => {
+                                setRegisteredImage02(null);
                             });
                         axios
                             .get<File | null>(
@@ -107,7 +123,12 @@ export default function SynthesisDialogUpload() {
                             .then((res) => {
                                 if (res.data) {
                                     setRegisteredImage03(res.data);
+                                } else {
+                                    setRegisteredImage03(null);
                                 }
+                            })
+                            .catch((error) => {
+                                setRegisteredImage03(null);
                             });
                         axios
                             .get<File | null>(
@@ -119,7 +140,12 @@ export default function SynthesisDialogUpload() {
                             .then((res) => {
                                 if (res.data) {
                                     setRegisteredImage04(res.data);
+                                } else {
+                                    setRegisteredImage04(null);
                                 }
+                            })
+                            .catch((error) => {
+                                setRegisteredImage04(null);
                             });
                     }}
                 >
@@ -206,6 +232,7 @@ export default function SynthesisDialogUpload() {
                         if (sourceFile) {
                             handleFileUpload(sourceFile);
                         }
+                        setRegisteredProductId(productIdInput);
                         setDialogType(null);
                     }}
                 >
