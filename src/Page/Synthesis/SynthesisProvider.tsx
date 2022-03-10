@@ -27,6 +27,7 @@ interface SynthesisContextProp {
         email: string;
     }) => void;
     getRegisteredImages: ({ id }: { id: string }) => void;
+    handleRegisteredImageUpload: (inputFile: File) => void;
     handleFileUpload: (inputFile: File) => void;
     handleAuthorizedImageClick: (
         e: React.MouseEvent<HTMLImageElement, MouseEvent>
@@ -58,6 +59,7 @@ const InitialSynthesisContext: SynthesisContextProp = {
     setRegisteringImages: () => {},
     requestImageRegister: () => {},
     getRegisteredImages: () => {},
+    handleRegisteredImageUpload: () => {},
     handleFileUpload: () => {},
     handleAuthorizedImageClick: () => {},
     handleImageClick: () => {},
@@ -152,28 +154,59 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
             return;
         }
 
-        await axios
-            .get<boolean>("http://localhost:5000/registered-image", {
-                headers: {
-                    id: JSON.stringify(id),
-                },
-            })
+        // await axios
+        //     .get<File | null>(
+        //         `http://localhost:5000/registered-image?product-id=${id}&product-index=0`,
+        //         {
+        //             responseType: "blob",
+        //         }
+        //     )
+        //     .then((res) => {
+        //         if (res.data) {
+        //             console.log(res.data.name);
+        //         }
+        //     });
+
+        const getImage = async (index: number) =>
+            await axios
+                .get<File>(
+                    `http://localhost:5000/registered-image?product-id=${id}&product-index=${index}`,
+                    { headers: { responseType: "blob" } }
+                )
+                .then((res) => {
+                    console.log(res.data.name);
+                    return res.data;
+                });
+
+        const images = await axios
+            .all([
+                getImage(0),
+                getImage(1),
+                getImage(2),
+                getImage(3),
+                getImage(4),
+            ])
             .then((res) => {
-                if (res.data) {
-                    return;
-                }
+                console.dir(res);
+                return res;
             })
-            .catch((error) => {
-                console.log(error);
+            .catch((err) => {
+                console.log(err);
                 alert(
-                    "죄송합니다. 제품 사진 로드 중 오류가 발생했습니다. 홈페이지 하단의 연락처로 연락해 주시면 신속히 처리하겠습니다."
+                    "죄송합니다. 등록된 제품을 받아오는 중 오류가 발생했습니다. 홈페이지 하단의 연락처로 연락해 주시면 신속히 처리하겠습니다."
                 );
-                return;
+                return [];
             });
         return;
     }
 
-    // input 파일 업로드
+    // input 파일 업로드 : 등록된 제품 이미지
+    function handleRegisteredImageUpload(inputFile: File) {
+        setRegisteredImage(inputFile);
+        setRegisteredImageURL(URL.createObjectURL(inputFile));
+    }
+
+    // input 파일 업로드 : 합성 배경 이미지
     function handleFileUpload(inputFile: File) {
         if (inputFile.type.startsWith("image/")) {
             setPhoto(inputFile);
@@ -330,6 +363,7 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
         setRegisteringImages,
         requestImageRegister,
         getRegisteredImages,
+        handleRegisteredImageUpload,
         handleFileUpload,
         handleAuthorizedImageClick,
         handleImageClick,

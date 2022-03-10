@@ -1,12 +1,38 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import { useSynthesisContext } from "../SynthesisProvider";
 import { StylelessButton } from "../../../StyledComponents";
 
 export default function SynthesisDialogUpload() {
-    const { dialogType, handleFileUpload, setDialogType } =
-        useSynthesisContext();
+    const {
+        dialogType,
+        handleRegisteredImageUpload,
+        handleFileUpload,
+        setDialogType,
+    } = useSynthesisContext();
+    const [productIdInput, setProductIdInput] = useState<string>("");
+    const [registeredImage00, setRegisteredImage00] = useState<File | null>(
+        null
+    );
+    const [registeredImage01, setRegisteredImage01] = useState<File | null>(
+        null
+    );
+    const [registeredImage02, setRegisteredImage02] = useState<File | null>(
+        null
+    );
+    const [registeredImage03, setRegisteredImage03] = useState<File | null>(
+        null
+    );
+    const [registeredImage04, setRegisteredImage04] = useState<File | null>(
+        null
+    );
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [sourceFile, setSourceFile] = useState<File | null>(null);
+
+    function selectImage(image: File) {
+        setSelectedImage(image);
+    }
 
     if (dialogType !== "upload") return null;
 
@@ -23,18 +49,130 @@ export default function SynthesisDialogUpload() {
                 </DialogCloseIcon>
             </ProductIdTagTextRow>
             <ProductIdInputRow>
-                <ProductIdInput />
-                <GetRegisteredImagesButton>
+                <ProductIdInput
+                    value={productIdInput}
+                    onChange={(e) => {
+                        setProductIdInput(e.target.value);
+                    }}
+                />
+                <GetRegisteredImagesButton
+                    onClick={async () => {
+                        if (!productIdInput) {
+                            alert("제품 id를 입력해주세요");
+                            return;
+                        }
+                        axios
+                            .get<File | null>(
+                                `http://localhost:5000/registered-image?product-id=${productIdInput}&product-index=0`,
+                                {
+                                    responseType: "blob",
+                                }
+                            )
+                            .then((res) => {
+                                if (res.data) {
+                                    setRegisteredImage00(res.data);
+                                }
+                            });
+                        axios
+                            .get<File | null>(
+                                `http://localhost:5000/registered-image?product-id=${productIdInput}&product-index=1`,
+                                {
+                                    responseType: "blob",
+                                }
+                            )
+                            .then((res) => {
+                                if (res.data) {
+                                    setRegisteredImage01(res.data);
+                                }
+                            });
+                        axios
+                            .get<File | null>(
+                                `http://localhost:5000/registered-image?product-id=${productIdInput}&product-index=2`,
+                                {
+                                    responseType: "blob",
+                                }
+                            )
+                            .then((res) => {
+                                if (res.data) {
+                                    setRegisteredImage02(res.data);
+                                }
+                            });
+                        axios
+                            .get<File | null>(
+                                `http://localhost:5000/registered-image?product-id=${productIdInput}&product-index=3`,
+                                {
+                                    responseType: "blob",
+                                }
+                            )
+                            .then((res) => {
+                                if (res.data) {
+                                    setRegisteredImage03(res.data);
+                                }
+                            });
+                        axios
+                            .get<File | null>(
+                                `http://localhost:5000/registered-image?product-id=${productIdInput}&product-index=4`,
+                                {
+                                    responseType: "blob",
+                                }
+                            )
+                            .then((res) => {
+                                if (res.data) {
+                                    setRegisteredImage04(res.data);
+                                }
+                            });
+                    }}
+                >
                     이미지 확인
                 </GetRegisteredImagesButton>
             </ProductIdInputRow>
-
             <RegisteredImagesPreviewRow>
-                <RegisteredImageContainer>
-                    <RegisteredImage />
-                </RegisteredImageContainer>
+                {registeredImage00 && (
+                    <RegisteredImage
+                        src={URL.createObjectURL(registeredImage00)}
+                        selected={selectedImage === registeredImage00}
+                        onClick={() => {
+                            selectImage(registeredImage00);
+                        }}
+                    />
+                )}
+                {registeredImage01 && (
+                    <RegisteredImage
+                        src={URL.createObjectURL(registeredImage01)}
+                        selected={selectedImage === registeredImage01}
+                        onClick={() => {
+                            selectImage(registeredImage01);
+                        }}
+                    />
+                )}
+                {registeredImage02 && (
+                    <RegisteredImage
+                        src={URL.createObjectURL(registeredImage02)}
+                        selected={selectedImage === registeredImage02}
+                        onClick={() => {
+                            selectImage(registeredImage02);
+                        }}
+                    />
+                )}
+                {registeredImage03 && (
+                    <RegisteredImage
+                        src={URL.createObjectURL(registeredImage03)}
+                        selected={selectedImage === registeredImage03}
+                        onClick={() => {
+                            selectImage(registeredImage03);
+                        }}
+                    />
+                )}
+                {registeredImage04 && (
+                    <RegisteredImage
+                        src={URL.createObjectURL(registeredImage04)}
+                        selected={selectedImage === registeredImage04}
+                        onClick={() => {
+                            selectImage(registeredImage04);
+                        }}
+                    />
+                )}
             </RegisteredImagesPreviewRow>
-
             <UploadSynthesisSourceRow>
                 <UploadSynthesisSourceRowTagText>
                     합성 소스 불러오기 (이미지 또는 동영상)
@@ -60,8 +198,11 @@ export default function SynthesisDialogUpload() {
             </UploadedSynthesisSourceTitle>
             <UploadButtonRow>
                 <UploadButton
-                    disabled={!sourceFile}
+                    disabled={!selectedImage || !sourceFile}
                     onClick={() => {
+                        if (selectedImage) {
+                            handleRegisteredImageUpload(selectedImage);
+                        }
                         if (sourceFile) {
                             handleFileUpload(sourceFile);
                         }
@@ -144,6 +285,7 @@ const GetRegisteredImagesButton = styled(StylelessButton)`
 
 const RegisteredImagesPreviewRow = styled.div`
     display: flex;
+    flex-wrap: nowrap;
     gap: 12px;
     width: 100%;
     height: 200px;
@@ -155,12 +297,20 @@ const RegisteredImagesPreviewRow = styled.div`
 `;
 
 const RegisteredImageContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100%;
-    width: fit-content;
+    width: 60%;
+    overflow: hidden;
+    border: 1px solid black;
 `;
 
-const RegisteredImage = styled.img`
+const RegisteredImage = styled.img<{ selected: boolean }>`
     height: 100%;
+    border: ${(props) =>
+        props.selected ? `3px solid blue` : `1px solid black`};
+    cursor: pointer;
 `;
 
 const UploadSynthesisSourceRow = styled.div`
