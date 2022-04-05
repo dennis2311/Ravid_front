@@ -14,7 +14,7 @@ export default function SynthesisGuide() {
                     <GuideTextIndex>01.</GuideTextIndex>
                     <GuideText>제품을 등록하세요.</GuideText>
                     <GuideText>
-                        제품의 ID와 예시 이미지 5장을 촬영하여 업로드 해야
+                        제품의 ID와 예시 이미지 30장을 촬영하여 업로드 해야
                         합니다.
                     </GuideText>
                     <GuideText>(제품 별로 초기 1회만 등록)</GuideText>

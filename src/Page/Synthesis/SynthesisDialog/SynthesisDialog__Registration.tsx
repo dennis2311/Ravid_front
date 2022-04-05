@@ -83,7 +83,7 @@ export default function SynthesisDialogRegistration() {
                 </ImageUploadContainer>
                 <ImageUploadGuideContainer>
                     <ImageUploadGuideText>
-                        이미지 촬영 가이드 (총 5장)
+                        이미지 촬영 가이드 (총 30장)
                     </ImageUploadGuideText>
                     <ImageUploadGuideImg
                         src={require("../../../Resources/img/product-register-guide-icon.png")}
