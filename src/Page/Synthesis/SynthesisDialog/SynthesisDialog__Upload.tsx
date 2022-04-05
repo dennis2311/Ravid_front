@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { API_ENDPOINT } from "../../../Constant";
 import { useSynthesisContext } from "../SynthesisProvider";
 import { StylelessButton } from "../../../StyledComponents";
 
@@ -64,7 +65,7 @@ export default function SynthesisDialogUpload() {
                         }
                         axios
                             .get<File | null>(
-                                `http://localhost:5000/registered-image?product-id=${productIdInput}&product-index=0`,
+                                `${API_ENDPOINT}/registered-image?product-id=${productIdInput}&product-index=0`,
                                 {
                                     responseType: "blob",
                                 }
@@ -81,7 +82,7 @@ export default function SynthesisDialogUpload() {
                             });
                         axios
                             .get<File | null>(
-                                `http://localhost:5000/registered-image?product-id=${productIdInput}&product-index=1`,
+                                `${API_ENDPOINT}/registered-image?product-id=${productIdInput}&product-index=1`,
                                 {
                                     responseType: "blob",
                                 }
@@ -98,7 +99,7 @@ export default function SynthesisDialogUpload() {
                             });
                         axios
                             .get<File | null>(
-                                `http://localhost:5000/registered-image?product-id=${productIdInput}&product-index=2`,
+                                `${API_ENDPOINT}/registered-image?product-id=${productIdInput}&product-index=2`,
                                 {
                                     responseType: "blob",
                                 }
@@ -115,7 +116,7 @@ export default function SynthesisDialogUpload() {
                             });
                         axios
                             .get<File | null>(
-                                `http://localhost:5000/registered-image?product-id=${productIdInput}&product-index=3`,
+                                `${API_ENDPOINT}/registered-image?product-id=${productIdInput}&product-index=3`,
                                 {
                                     responseType: "blob",
                                 }
@@ -132,7 +133,7 @@ export default function SynthesisDialogUpload() {
                             });
                         axios
                             .get<File | null>(
-                                `http://localhost:5000/registered-image?product-id=${productIdInput}&product-index=4`,
+                                `${API_ENDPOINT}/registered-image?product-id=${productIdInput}&product-index=4`,
                                 {
                                     responseType: "blob",
                                 }

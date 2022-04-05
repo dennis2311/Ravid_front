@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
-import { ChildrenProp } from "../../Constant";
+import { ChildrenProp, API_ENDPOINT } from "../../Constant";
 
 interface SynthesisContextProp {
     registeringImages: File[];
@@ -124,7 +124,7 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
         formData.append("image4", registeringImages[4]);
 
         await axios
-            .post<boolean>("http://localhost:5000/register", formData, {
+            .post<boolean>(`${API_ENDPOINT}/register`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     id: JSON.stringify(id),
@@ -231,7 +231,7 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
 
             await axios
                 .post<File | null>(
-                    "http://localhost:5000/synthesis-photo",
+                    `${API_ENDPOINT}/synthesis-photo`,
                     formData,
                     {
                         headers: {
@@ -267,7 +267,7 @@ export default function SynthesisProvider({ children }: ChildrenProp) {
 
             await axios
                 .post<File | null>(
-                    "http://localhost:5000/synthesis-video",
+                    `${API_ENDPOINT}/synthesis-video`,
                     formData,
                     {
                         headers: {
